@@ -10,3 +10,18 @@ wheels/
 .venv/
 
 .direnv/
+
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Folders
+/vendor/
+/bin/
+/pkg/

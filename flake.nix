@@ -59,7 +59,7 @@
         in
         {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ go gopls gotools go-tools rye ];
+            buildInputs = with pkgs; [ go gopls gotools go-tools delve rye ];
             shellHook = ''
               rye sync && source .venv/bin/activate              
             '';

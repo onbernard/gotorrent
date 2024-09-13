@@ -36,7 +36,7 @@ func TestParseExactTopic(t *testing.T) {
 	//
 	xtList := [...]string{btih_1, btih_2, btmh_1, ed2k_1, ed2k_2, tth_1, sha1_1, sha256_1, sha512_1, md5_1, crc32_1, bitprint_1, aich_1, kzhash_1, kad_1}
 	for _, xt := range xtList {
-		parsedXT, err := ParseExactTopic(xt)
+		parsedXT, err := magnet.ParseExactTopic(xt)
 		if err != nil {
 			t.Errorf("failed to parse %v", xt)
 		} else {

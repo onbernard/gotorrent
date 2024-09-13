@@ -9,14 +9,37 @@
 #   generate-hashes: false
 #   universal: false
 
+-e file:.
+aiohappyeyeballs==2.4.0
+    # via aiohttp
+aiohttp==3.10.5
+    # via gotorrent
+aiosignal==1.3.1
+    # via aiohttp
+async-timeout==4.0.3
+    # via gotorrent
 asyncudp==0.11.0
+    # via gotorrent
+attrs==24.2.0
+    # via aiohttp
 bencode-py==4.0.0
+    # via gotorrent
 certifi==2024.8.30
     # via requests
 charset-normalizer==3.3.2
     # via requests
+frozenlist==1.4.1
+    # via aiohttp
+    # via aiosignal
 idna==3.8
     # via requests
+    # via yarl
+multidict==6.1.0
+    # via aiohttp
+    # via yarl
 requests==2.32.3
-urllib3==2.2.2
+    # via gotorrent
+urllib3==2.2.3
     # via requests
+yarl==1.11.1
+    # via aiohttp

@@ -1,4 +1,4 @@
-package main
+package tracker
 
 import (
 	"fmt"
@@ -32,8 +32,8 @@ func (t ExactTopicHashType) String() string {
 }
 
 type ExactTopic struct {
-	hashType ExactTopicHashType
-	hash     string
+	HashType ExactTopicHashType
+	Hash     string
 }
 
 type MagnetLink struct {
@@ -64,47 +64,47 @@ func ParseExactTopic(xt string) (*ExactTopic, error) {
 	}
 	switch xtParts[1] {
 	case `btih`:
-		outp.hashType = BTIH
-		outp.hash = xtParts[2]
+		outp.HashType = BTIH
+		outp.Hash = xtParts[2]
 	case `btmh`:
-		outp.hashType = BTMH
-		outp.hash = xtParts[2]
+		outp.HashType = BTMH
+		outp.Hash = xtParts[2]
 	case `ed2k`:
-		outp.hashType = EDonkey
-		outp.hash = xtParts[2]
+		outp.HashType = EDonkey
+		outp.Hash = xtParts[2]
 	case `tree`:
 		if len(xtParts) < 4 {
 			return nil, fmt.Errorf("unexpected xt format: %v", xt)
 		}
-		outp.hashType = TigerTree
-		outp.hash = xtParts[3]
+		outp.HashType = TigerTree
+		outp.Hash = xtParts[3]
 	case `sha1`:
-		outp.hashType = SHA1
-		outp.hash = xtParts[2]
+		outp.HashType = SHA1
+		outp.Hash = xtParts[2]
 	case `sha256`:
-		outp.hashType = SHA256
-		outp.hash = xtParts[2]
+		outp.HashType = SHA256
+		outp.Hash = xtParts[2]
 	case `sha512`:
-		outp.hashType = SHA512
-		outp.hash = xtParts[2]
+		outp.HashType = SHA512
+		outp.Hash = xtParts[2]
 	case `md5`:
-		outp.hashType = MD5
-		outp.hash = xtParts[2]
+		outp.HashType = MD5
+		outp.Hash = xtParts[2]
 	case `crc32`:
-		outp.hashType = CRC32
-		outp.hash = xtParts[2]
+		outp.HashType = CRC32
+		outp.Hash = xtParts[2]
 	case `bitprint`:
-		outp.hashType = BitPrint
-		outp.hash = xtParts[2]
+		outp.HashType = BitPrint
+		outp.Hash = xtParts[2]
 	case `aich`:
-		outp.hashType = AICH
-		outp.hash = xtParts[2]
+		outp.HashType = AICH
+		outp.Hash = xtParts[2]
 	case `kzhash`:
-		outp.hashType = Kazaa
-		outp.hash = xtParts[2]
+		outp.HashType = Kazaa
+		outp.Hash = xtParts[2]
 	case `kad`:
-		outp.hashType = Kademlia
-		outp.hash = xtParts[2]
+		outp.HashType = Kademlia
+		outp.Hash = xtParts[2]
 	}
 	return &outp, nil
 }

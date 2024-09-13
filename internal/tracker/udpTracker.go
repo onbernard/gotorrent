@@ -1,13 +1,17 @@
-package main
+package tracker
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/rand"
 	"net"
 	"net/url"
 	"time"
+
+	"github.com/onbernard/gotorrent/internal/utils"
+	log "github.com/sirupsen/logrus"
 )
 
 type ConnectionRequestParams struct {
@@ -68,7 +72,7 @@ func MakeAnnounceRequest(p *AnnounceRequestParams) ([98]byte, error) {
 		return [98]byte{}, errors.New("infoHash should be a string of length 40")
 	}
 	if p.PeerID == "" {
-		p.PeerID = RandStringBytes(40)
+		p.PeerID = utils.RandStringBytes(40)
 	}
 	if len(p.PeerID) != 40 {
 		return [98]byte{}, errors.New("if set, peerID should be a string of length 40")
@@ -89,8 +93,16 @@ func MakeAnnounceRequest(p *AnnounceRequestParams) ([98]byte, error) {
 	binary.BigEndian.PutUint64(buf[0:], p.ConnectionID)   // Connection ID
 	binary.BigEndian.PutUint32(buf[8:], 0x1)              // Action, 1 for announce
 	binary.BigEndian.PutUint32(buf[12:], p.TransactionID) // TransactionID
-	copy(buf[16:], []byte(p.InfoHash))
-	copy(buf[36:], []byte(p.PeerID))
+	bytes, err := hex.DecodeString(p.InfoHash)
+	if err != nil {
+		return [98]byte{}, err
+	}
+	copy(buf[16:], bytes)
+	bytes, err = hex.DecodeString(p.PeerID)
+	if err != nil {
+		return [98]byte{}, err
+	}
+	copy(buf[36:], bytes)
 	binary.BigEndian.PutUint64(buf[56:], p.Downloaded) // Downloaded
 	binary.BigEndian.PutUint64(buf[64:], p.Left)       // left, -1 (0xFFFFFFFF) for default
 	binary.BigEndian.PutUint64(buf[72:], p.Uploaded)   // Uploaded
@@ -126,7 +138,6 @@ func ParseAnnounceResponse(buffer []byte) (*AnnounceResponse, error) {
 
 	peers := []Peer{}
 	peerData := buffer[20:]
-
 	if len(peerData)%6 != 0 {
 		return nil, errors.New("peer data length is not a multiple of 6")
 	}
@@ -164,8 +175,10 @@ func RequestUDPTracker(trackerURL string, hash string) (*AnnounceResponse, error
 		return nil, err
 	}
 	defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	log.Debugf("PORT=%d", localAddr.Port)
 	// Set timeout
-	err = conn.SetDeadline(time.Now().Add(5 * time.Second))
+	err = conn.SetDeadline(time.Now().Add(15 * time.Second))
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +190,7 @@ func RequestUDPTracker(trackerURL string, hash string) (*AnnounceResponse, error
 		return nil, err
 	}
 	// Receive connection response from the tracker
-	buffer := make([]byte, 1024)
+	buffer := make([]byte, 4098)
 	n, _, err := conn.ReadFromUDP(buffer)
 	if err != nil {
 		return nil, err

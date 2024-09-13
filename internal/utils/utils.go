@@ -1,8 +1,8 @@
-package main
+package utils
 
 import "math/rand"
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+const letterBytes = "0123456789abcdef"
 
 func RandStringBytes(n int) string {
 	b := make([]byte, n)
